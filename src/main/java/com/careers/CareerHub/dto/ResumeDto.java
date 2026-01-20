@@ -12,7 +12,7 @@ public class ResumeDto {
     private String fileUrl;
     private String fileType;
     private Long fileSize;
-    private User user;
+//    private User user;
     private Instant uploadedAt;
 }
 

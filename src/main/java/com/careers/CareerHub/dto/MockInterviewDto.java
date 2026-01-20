@@ -8,6 +8,6 @@ public class MockInterviewDto {
     private Long id;
     private String videoUrl;
     private Integer score;
-    private Interview interview;
+//    private Interview interview;
     private String feedback;
 }

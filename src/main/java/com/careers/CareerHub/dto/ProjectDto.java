@@ -13,7 +13,7 @@ public class ProjectDto {
     private String githubUrl;
     private String liveDemoUrl;
     private String techStack;
-    private User owner;
+//    private User owner;
     private boolean isPublic;
     private Instant createdAt;
 }

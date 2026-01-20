@@ -13,7 +13,7 @@ public class InterviewDto {
     private String role;
     private Instant scheduledAt;
     private Integer durationMinutes;
-    private User organizer;
-    private User candidate;
+//    private User organizer;
+//    private User candidate;
     private InterviewStatus status;
 }
