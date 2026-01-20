@@ -1,6 +1,7 @@
 package com.careers.CareerHub.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
@@ -22,6 +23,7 @@ public class Project {
 
     private boolean isPublic;
 
+    @CreationTimestamp
     private Instant createdAt;
 
 }

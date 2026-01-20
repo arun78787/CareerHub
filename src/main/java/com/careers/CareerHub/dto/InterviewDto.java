@@ -1,27 +1,19 @@
-package com.careers.CareerHub.entity;
+package com.careers.CareerHub.dto;
 
-import jakarta.persistence.*;
+import com.careers.CareerHub.entity.InterviewStatus;
+import com.careers.CareerHub.entity.User;
+import lombok.Data;
 
 import java.time.Instant;
 
-@Entity
-public class Interview {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Data
+public class InterviewDto {
     private Long id;
-
     private String company;
     private String role;
-
     private Instant scheduledAt;
     private Integer durationMinutes;
-
-    @ManyToOne
     private User organizer;
-    @ManyToOne
     private User candidate;
-
-    @Enumerated(EnumType.STRING)
     private InterviewStatus status;
-
 }

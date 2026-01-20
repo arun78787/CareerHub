@@ -1,6 +1,7 @@
 package com.careers.CareerHub.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
@@ -17,6 +18,7 @@ public class Resume {
     @OneToOne
     private User user;
 
+    @CreationTimestamp
     private Instant uploadedAt;
 
 }
