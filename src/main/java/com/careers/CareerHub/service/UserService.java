@@ -4,7 +4,7 @@ import com.careers.CareerHub.entity.Role;
 import com.careers.CareerHub.entity.User;
 import com.careers.CareerHub.repository.*;
 import com.careers.CareerHub.dto.auth.RegistrationRequest;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

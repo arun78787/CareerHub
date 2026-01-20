@@ -1,7 +1,10 @@
 package com.careers.CareerHub.dto;
 
+import lombok.Data;
+
 import java.time.Instant;
 
+@Data
 public class PhotoDto {
     private Long id;
     private String fileName;
