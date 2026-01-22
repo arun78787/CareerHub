@@ -1,5 +1,6 @@
 package com.careers.CareerHub.controller;
 
+import com.careers.CareerHub.dto.auth.AuthResponse;
 import com.careers.CareerHub.dto.UserLoginDto;
 import com.careers.CareerHub.dto.UserResponseDto;
 import com.careers.CareerHub.entity.User;

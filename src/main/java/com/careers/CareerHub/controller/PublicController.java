@@ -1,5 +1,6 @@
 package com.careers.CareerHub.controller;
 
+import com.careers.CareerHub.dto.PublicPortfolioDto;
 import com.careers.CareerHub.entity.User;
 import com.careers.CareerHub.repository.ProjectRepository;
 import com.careers.CareerHub.repository.ResumeRepository;
@@ -25,10 +26,10 @@ public class PublicController {
                 .orElseThrow();
 
         return ResponseEntity.ok(
-                new PublicProfileDto(
+                new PublicPortfolioDto(
                         user.getFirstName() + " " + user.getLastName(),
                         user.getEmail(),
-                        projectRepository.findByUser(user),
+                        projectRepository.findByOwner(user),
                         resumeRepository.findByUser(user).orElse(null)
                 )
         );

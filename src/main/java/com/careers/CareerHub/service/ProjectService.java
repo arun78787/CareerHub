@@ -34,10 +34,9 @@ public class ProjectService {
         return projectRepository.save(p);
     }
     public List<Project> getUserProjects(String email){
-        return ProjectRepository.findAll()
-                .stream()
-                .filter(p->p.getOwner().getEmail().equals(email))
-                .toList();
+        User user = userRepository.findByEmail(email).orElseThrow();
+        return projectRepository.findByOwner(user);
+
     }
 
 }

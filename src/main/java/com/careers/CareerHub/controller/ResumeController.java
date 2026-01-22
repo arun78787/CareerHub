@@ -1,10 +1,11 @@
 package com.careers.CareerHub.controller;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+
 import com.careers.CareerHub.entity.Resume;
-import com.careers.CareerHub.repository.ResumeRepository;
 import com.careers.CareerHub.security.CustomUserDetails;
 import com.careers.CareerHub.service.ResumeService;
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -54,7 +55,8 @@ public class ResumeController {
         Resume resume = resumeService.getMyResume(user.getUsername());
         Path path = Paths.get(resume.getFileUrl());
 
-        Resource resource = new UrlResponse(path.toUri());
+        Resource resource = new UrlResource(path.toUri());
+
 
         return ResponseEntity.ok()
                 .header(
