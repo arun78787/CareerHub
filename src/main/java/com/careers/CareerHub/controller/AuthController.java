@@ -1,7 +1,9 @@
 package com.careers.CareerHub.controller;
 
+import com.careers.CareerHub.dto.UserLoginDto;
 import com.careers.CareerHub.dto.UserResponseDto;
 import com.careers.CareerHub.entity.User;
+import com.careers.CareerHub.service.AuthService;
 import com.careers.CareerHub.service.UserService;
 import com.careers.CareerHub.dto.auth.RegistrationRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,14 +15,17 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
+    private final AuthService authService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signup(@RequestBody RegistrationRequest req){
-        User saved = userService.register(req);
-        UserResponseDto resp = mapToResponse(saved);
-        return ResponseEntity.ok(resp);
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDto> register(@RequestBody RegistrationRequest request){
+        User saved = userService.register(request);
+        return ResponseEntity.ok(mapToResponse(saved));
     }
-
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody UserLoginDto request){
+        return ResponseEntity.ok(authService.login(request));
+    }
     private UserResponseDto mapToResponse(User u){
         UserResponseDto dto = new UserResponseDto();
         dto.setId(u.getId());
