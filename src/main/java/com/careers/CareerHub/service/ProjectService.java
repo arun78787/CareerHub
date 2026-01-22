@@ -6,6 +6,7 @@ import com.careers.CareerHub.entity.User;
 import com.careers.CareerHub.repository.ProjectRepository;
 import com.careers.CareerHub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
+    @PreAuthorize("hasRole('USER')")
     public Project create(ProjectDto dto, String userEmail){
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow();

@@ -1,46 +1,45 @@
 package com.careers.CareerHub.controller;
 
-import com.careers.CareerHub.dto.ProjectDto;
 import com.careers.CareerHub.security.CustomUserDetails;
-import com.careers.CareerHub.service.JwtService;
-import com.careers.CareerHub.service.ProjectService;
+import com.careers.CareerHub.service.InterviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/projects")
-@RequiredArgsConstructor
-public class ProjectController {
+import java.time.Instant;
 
-    private final ProjectService projectService;
+@RestController
+@RequestMapping("/api/interviews")
+@RequiredArgsConstructor
+public class InterviewController {
+
+    private final InterviewService interviewService;
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping
-    public ResponseEntity<?> createProject(
+    @PostMapping("/schedule")
+    public ResponseEntity<?> schedule(
             @AuthenticationPrincipal CustomUserDetails user,
-            @RequestBody ProjectDto dto
+            @RequestParam Instant scheduledAt,
+            @RequestParam String interviewerName
     ) {
         return ResponseEntity.ok(
-                projectService.create(dto, user.getUsername())
+                interviewService.scheduleInterview(
+                        scheduledAt,
+                        interviewerName,
+                        user.getUsername()
+                )
         );
     }
+
     @PreAuthorize("hasRole('USER')")
     @GetMapping
-    public ResponseEntity<?> myProjects(
+    public ResponseEntity<?> myInterviews(
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         return ResponseEntity.ok(
-                projectService.getUserProjects(user.getUsername())
+                interviewService.myInterviews(user.getUsername())
         );
     }
-    //ADMIN only side
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/all")
-    public ResponseEntity<?> allProjects(){
-        return ResponseEntity.ok("Admin can see all projects");
-    }
 }
-
