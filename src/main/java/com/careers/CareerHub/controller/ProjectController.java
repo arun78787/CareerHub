@@ -28,12 +28,16 @@ public class ProjectController {
         );
     }
     @PreAuthorize("hasRole('USER')")
-    @GetMapping
+    @GetMapping("/me")
     public ResponseEntity<?> myProjects(
-            @AuthenticationPrincipal CustomUserDetails user
+            @AuthenticationPrincipal CustomUserDetails user,
+            @RequestParam(defaultValue =  "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String dir
     ) {
         return ResponseEntity.ok(
-                projectService.getUserProjects(user.getUsername())
+                projectService.getUserProjects(user.getUsername(),page, size,sortBy,dir)
         );
     }
     //ADMIN only side

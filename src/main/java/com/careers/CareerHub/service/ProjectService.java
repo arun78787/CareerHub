@@ -6,21 +6,19 @@ import com.careers.CareerHub.entity.User;
 import com.careers.CareerHub.repository.ProjectRepository;
 import com.careers.CareerHub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
+
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
-    @PreAuthorize("hasRole('USER')")
-    public Project create(ProjectDto dto, String userEmail){
+    public Project create(ProjectDto dto, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         Project p = new Project();
         p.setTitle(dto.getTitle());
@@ -33,10 +31,23 @@ public class ProjectService {
 
         return projectRepository.save(p);
     }
-    public List<Project> getUserProjects(String email){
-        User user = userRepository.findByEmail(email).orElseThrow();
-        return projectRepository.findByOwner(user);
 
+    public Page<Project> getUserProjects(
+            String email,
+            int page,
+            int size,
+            String sortBy,
+            String dir
+    ) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Sort sort = "desc".equalsIgnoreCase(dir)
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return projectRepository.findByOwner(user, pageable);
     }
-
 }

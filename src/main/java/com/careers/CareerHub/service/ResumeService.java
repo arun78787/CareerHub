@@ -10,52 +10,53 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
+import java.net.URL;
+import java.time.Duration;
 
 @Service
 @RequiredArgsConstructor
 public class ResumeService {
     private final ResumeRepository resumeRepository;
     private final UserRepository userRepository;
-
-    private static final String UPLOAD_DIR = "uploads/resumes/";
+    private final S3Service s3Service;
 
     @Transactional
     public Resume uploadResume(
             MultipartFile file,
             String title,
             String userEmail
-    ) throws IOException {
+    ) throws Exception { // throws Exception because S3Service.uploadFile can throw
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow();
-        //create directory if not exist
-        Files.createDirectories(Paths.get(UPLOAD_DIR));
 
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path filePath = Paths.get(UPLOAD_DIR + fileName);
-
-        Files.write(filePath, file.getBytes());
+        // Upload to S3 and get the object key
+        String key = s3Service.uploadFile(file);
 
         Resume resume = resumeRepository
                 .findByUser(user)
                 .orElse(new Resume());
 
         resume.setTitle(title);
-        resume.setFileUrl(filePath.toString());
+        resume.setFileUrl(key);                 // store S3 key (not a local path)
         resume.setFileType(file.getContentType());
         resume.setFileSize(file.getSize());
         resume.setUser(user);
 
         return resumeRepository.save(resume);
     }
+
     public Resume getMyResume(String email){
         User user = userRepository.findByEmail(email)
                 .orElseThrow();
 
         return resumeRepository.findByUser(user)
-                .orElseThrow(() ->new RuntimeException("No resume uploaded"));
+                .orElseThrow(() -> new RuntimeException("No resume uploaded"));
+    }
+
+    /**
+     * Returns a presigned URL for the given S3 key, valid for 15 minutes.
+     */
+    public URL getSignedUrl(String key) {
+        return s3Service.getPresignedUrl(key, Duration.ofMinutes(15));
     }
 }
