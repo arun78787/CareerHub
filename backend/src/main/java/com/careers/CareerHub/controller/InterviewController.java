@@ -21,12 +21,21 @@ public class InterviewController {
     @PostMapping("/schedule")
     public ResponseEntity<?> schedule(
             @AuthenticationPrincipal CustomUserDetails user,
-            @RequestParam Instant scheduledAt,
+            @RequestParam String scheduledAt,    // accept string from client
             @RequestParam String interviewerName
     ) {
+        // parse ISO string; will throw DateTimeParseException if bad
+        Instant scheduled;
+        try {
+            scheduled = Instant.parse(scheduledAt);
+        } catch (Exception ex) {
+            // If client sends local datetime like "2026-01-30T10:00", try to parse as local and convert:
+            scheduled = Instant.parse(scheduledAt + "Z"); // fallback - better to send timezone from client
+        }
+
         return ResponseEntity.ok(
                 interviewService.scheduleInterview(
-                        scheduledAt,
+                        scheduled,
                         interviewerName,
                         user.getUsername()
                 )

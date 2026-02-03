@@ -26,11 +26,15 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/careerhub
       SPRING_DATASOURCE_USERNAME: careerhub
       SPRING_DATASOURCE_PASSWORD: careerhub123
-      JWT_SECRET: ${JWT_SECRET:-Y2FyZWVyaHViX3NlY3JldF9rZXk=} # base64 default (replace)
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_REGION: ${AWS_REGION}
-      AWS_S3_BUCKET: ${AWS_S3_BUCKET}
+
+      JWT_SECRET: ${JWT_SECRET:-Y2FyZWVyaHViX3NlY3JldF9rZXk=}
+
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET:-}
+
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+
     ports:
       - "8080:8080"
 volumes:

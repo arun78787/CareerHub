@@ -51,4 +51,13 @@ public class ResumeController {
         URL url = resumeService.getSignedUrl(resume.getFileUrl());
         return ResponseEntity.ok(Map.of("url", url.toString()));
     }
+
+    public ResponseEntity<?> getMyResumeAiReview(@AuthenticationPrincipal CustomUserDetails user){
+        Resume resume = resumeService.getMyResume(user.getUsername());
+        return ResponseEntity.ok(Map.of(
+                "aiScore", resume.getAiScore(),
+                "aiReview", resume.getAiReview(),
+                "parsedSkills", resume.getParsedSkills()
+        ));
+    }
 }

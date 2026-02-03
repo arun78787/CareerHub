@@ -16,13 +16,14 @@ public interface InterviewRepository extends JpaRepository<Interview, Long> {
     long countByUserAndStatus(User user, InterviewStatus status);
 
     @Query("""
-    SELECT 
-        COUNT(CASE WHEN i.status = com.careers.CareerHub.entity.InterviewStatus.SCHEDULED THEN 1 END) AS scheduled,
-        COUNT(CASE WHEN i.status = com.careers.CareerHub.entity.InterviewStatus.COMPLETED THEN 1 END) AS completed,
-        COUNT(CASE WHEN i.status = com.careers.CareerHub.entity.InterviewStatus.CANCELLED THEN 1 END) AS cancelled
+    SELECT
+       SUM(CASE WHEN i.status = com.careers.CareerHub.entity.InterviewStatus.SCHEDULED THEN 1 ELSE 0 END) AS scheduled,
+       SUM(CASE WHEN i.status = com.careers.CareerHub.entity.InterviewStatus.COMPLETED THEN 1 ELSE 0 END) AS completed,
+       SUM(CASE WHEN i.status = com.careers.CareerHub.entity.InterviewStatus.CANCELLED THEN 1 ELSE 0 END) AS cancelled
     FROM Interview i
     WHERE i.user = :user
     """)
     InterviewAnalytics interviewStats(@Param("user") User user);
+
 
 }

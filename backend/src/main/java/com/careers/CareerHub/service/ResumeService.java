@@ -20,6 +20,10 @@ public class ResumeService {
     private final UserRepository userRepository;
     private final S3Service s3Service;
 
+    //add a new dependency at top of ResumeService
+    private final ResumeAiService resumeAiService; // constructor-injected
+
+
     @Transactional
     public Resume uploadResume(
             MultipartFile file,
@@ -41,8 +45,17 @@ public class ResumeService {
         resume.setFileType(file.getContentType());
         resume.setFileSize(file.getSize());
         resume.setUser(user);
+        //save first
+        Resume saved = resumeRepository.save(resume);
+        //trigger async review (non blocking)
+        try{
+            resumeAiService.reviewResumeAsync(saved.getId());
+        } catch(Exception e){
+            // intentionally ignored
+            // AI failure must NOT break resume upload
+        }
 
-        return resumeRepository.save(resume);
+        return saved;
     }
 
     public Resume getMyResume(String email){

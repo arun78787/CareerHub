@@ -38,20 +38,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loadMe();
   }, []);
 
+  const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8080/api';
+
   async function login(email: string, password: string) {
-    const res = await fetch('http://localhost:8080/api/auth/login', {
+    const res = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     });
-
+  
     if (!res.ok) throw new Error('Invalid credentials');
-
+  
     const data = await res.json();
-    // backend returns: { accessToken, refreshToken?, user }
-    localStorage.setItem('ch_access_token', data.accessToken);
+    // backend returns { token, user }
+    const token = data.token ?? data.accessToken;
+    localStorage.setItem('ch_access_token', token);
     setUser(data.user);
   }
+
 
   function logout() {
     localStorage.removeItem('ch_access_token');

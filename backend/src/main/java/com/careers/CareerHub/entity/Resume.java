@@ -22,6 +22,20 @@ public class Resume {
     @OneToOne
     private User user;
 
+    /**
+     * Optional: store parsed skills as a JSON string (e.g. ["Spring Boot","MySQL"])
+     * For now we'll store JSON text. You can change to a JSON column later.
+     */
+    @Column(columnDefinition = "TEXT")
+    private String parsedSkills;
+
+    //full AI review JSON(stringified) returned by LLM
+    @Column(columnDefinition = "LONGTEXT")
+    private String aiReview;
+
+    //simple numeric score 0-100 suggested by AI review
+    private Integer aiScore;
+
     @CreationTimestamp
     private Instant uploadedAt;
 
